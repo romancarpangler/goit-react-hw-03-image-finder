@@ -1,10 +1,12 @@
 import css from '../css.module.css';
 import { ImageGalleryItem } from './imageitem';
 
-export const ImageGallery = () => {
+export const ImageGallery = ({ data }) => {
   return (
     <ul className={css.ImageGallery}>
-      <ImageGalleryItem></ImageGalleryItem>
+      {data.map(data => {
+        return <ImageGalleryItem key={data.id} data={data} />;
+      })}
     </ul>
   );
 };
