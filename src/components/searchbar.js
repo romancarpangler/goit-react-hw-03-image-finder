@@ -10,9 +10,10 @@ export class Searchbar extends Component {
     e.preventDefault();
     if (!this.state.value) {
       console.log(this.state.value);
-      return alert('gggggg');
+      return alert('тут може бути ваша реклама');
     }
-    this.props.submit(this.state.value);
+
+    this.props.submit(this.state.value.toLocaleLowerCase());
   };
 
   handleChenge = e => {
