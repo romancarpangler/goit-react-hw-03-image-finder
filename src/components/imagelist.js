@@ -1,5 +1,6 @@
 import css from '../css.module.css';
 import { ImageGalleryItem } from './imageitem';
+import PropTypes from 'prop-types';
 
 export const ImageGallery = ({ data }) => {
   return (
@@ -9,4 +10,8 @@ export const ImageGallery = ({ data }) => {
       })}
     </ul>
   );
+};
+
+ImageGallery.propTypes = {
+  data: PropTypes.arrayOf(PropTypes.object),
 };

@@ -24,7 +24,7 @@ export class App extends Component {
       prevState.search !== this.state.search &&
       this.state.data.length !== 0
     ) {
-      this.setState({ data: [] });
+      this.setState({ data: [], pageNumder: 1 });
     }
   }
 

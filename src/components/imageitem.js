@@ -1,6 +1,7 @@
 import { Component } from 'react';
 import css from '../css.module.css';
 import { Modal } from './modalwindow';
+import PropTypes from 'prop-types';
 
 export class ImageGalleryItem extends Component {
   state = {
@@ -11,6 +12,7 @@ export class ImageGalleryItem extends Component {
   };
   render() {
     const data = this.props.data;
+
     return (
       <li className={css.ImageGalleryItem}>
         <img
@@ -26,3 +28,7 @@ export class ImageGalleryItem extends Component {
     );
   }
 }
+
+ImageGalleryItem.propTypes = {
+  data: PropTypes.object.isRequired,
+};
