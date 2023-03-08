@@ -21,9 +21,11 @@ export class App extends Component {
     ) {
       this.setState({ data: [], pageNumder: 1 });
     }
+
     if (
       prevState.search !== this.state.search ||
-      prevState.pageNumder !== this.state.pageNumder
+      (prevState.pageNumder !== this.state.pageNumder &&
+        this.state.data.length !== 0)
     ) {
       setTimeout(() => {
         this.fetchImages();
@@ -42,10 +44,6 @@ export class App extends Component {
     }));
 
     this.setState({ loader: false });
-
-    setTimeout(() => {
-      console.log(this.state.totalHits);
-    }, 0);
   };
 
   handleSubmit = value => {
