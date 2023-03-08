@@ -8,6 +8,7 @@ import { Button } from './buttonpagination';
 export class App extends Component {
   state = {
     data: [],
+    totalHits: 0,
     search: '',
     pageNumder: 1,
     loader: false,
@@ -15,16 +16,18 @@ export class App extends Component {
 
   componentDidUpdate(_, prevState) {
     if (
-      prevState.search !== this.state.search ||
-      prevState.pageNumder !== this.state.pageNumder
-    ) {
-      this.fetchImages();
-    }
-    if (
       prevState.search !== this.state.search &&
       this.state.data.length !== 0
     ) {
       this.setState({ data: [], pageNumder: 1 });
+    }
+    if (
+      prevState.search !== this.state.search ||
+      prevState.pageNumder !== this.state.pageNumder
+    ) {
+      setTimeout(() => {
+        this.fetchImages();
+      }, 0);
     }
   }
 
@@ -32,9 +35,17 @@ export class App extends Component {
     this.setState({ loader: true });
 
     const data = await api(this.state.search, this.state.pageNumder);
-    this.setState(prevState => ({ data: [...prevState.data, ...data] }));
+    this.setState(prevState => ({ data: [...prevState.data, ...data.hits] }));
+
+    this.setState(() => ({
+      totalHits: data.totalHits,
+    }));
 
     this.setState({ loader: false });
+
+    setTimeout(() => {
+      console.log(this.state.totalHits);
+    }, 0);
   };
 
   handleSubmit = value => {
@@ -60,9 +71,9 @@ export class App extends Component {
             ariaLabel="loading"
           />
         )}
-        {this.state.search && <ImageGallery data={this.state.data} />}
+        {this.state.data.length > 0 && <ImageGallery data={this.state.data} />}
 
-        {this.state.data.length > 0 && (
+        {this.state.totalHits > this.state.data.length && (
           <Button click={this.clickButtonPagination}></Button>
         )}
         {this.state.data.length === 0 && this.state.search && (
@@ -72,3 +83,4 @@ export class App extends Component {
     );
   }
 }
+// totalHits > items.length;

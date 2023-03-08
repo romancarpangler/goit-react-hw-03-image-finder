@@ -12,6 +12,6 @@ export async function api(query, pageNumder) {
         return new Error(response.status);
       }
 
-      return response.data.hits;
+      return response.data;
     });
 }
