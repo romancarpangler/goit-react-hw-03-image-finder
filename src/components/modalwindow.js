@@ -6,7 +6,7 @@ export const Modal = ({ onModal, img }) => {
   useEffect(() => {
     window.addEventListener('keydown', keyDown);
     return window.removeEventListener('keydown', keyDown);
-  }, []);
+  }, [keyDown]);
 
   const keyDown = event => {
     if (event.code === 'Escape') {

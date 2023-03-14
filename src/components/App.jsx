@@ -17,7 +17,7 @@ export const App = () => {
     if (search) {
       fetchImages();
     }
-  }, [search, pageNumder]);
+  }, [search, pageNumder, fetchImages]);
 
   const fetchImages = async () => {
     setloader(true);
