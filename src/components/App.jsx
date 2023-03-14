@@ -19,21 +19,6 @@ export const App = () => {
     }
   }, [search, pageNumder]);
 
-  // const componentDidUpdate = (_, prevState) => {
-  //   if (prevState.search !== search && data.length !== 0) {
-  //     this.setState({ data: [], pageNumder: 1 });
-  //   }
-
-  //   if (
-  //     prevState.search !== search ||
-  //     (prevState.pageNumder !== pageNumder && data.length !== 0)
-  //   ) {
-  //     setTimeout(() => {
-  //       fetchImages();
-  //     }, 0);
-  //   }
-  // };
-
   const fetchImages = async () => {
     setloader(true);
 
@@ -74,7 +59,7 @@ export const App = () => {
       )}
       {data.length > 0 && <ImageGallery data={data} />}
 
-      {totalHits > data.length && (
+      {totalHits > data.length && !loader && (
         <Button click={clickButtonPagination}></Button>
       )}
       {data.length === 0 && search && !loader && (
