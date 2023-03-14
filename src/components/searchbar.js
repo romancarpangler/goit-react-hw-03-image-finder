@@ -1,46 +1,41 @@
 import css from '../css.module.css';
-import { Component } from 'react';
+import { useState } from 'react';
 import PropTypes from 'prop-types';
 
-export class Searchbar extends Component {
-  state = {
-    value: '',
-  };
+export const Searchbar = ({ submit }) => {
+  const [value, setValue] = useState('');
 
-  handleSubmit = e => {
-    e.preventDefault();
-    if (!this.state.value) {
-      console.log(this.state.value);
+  const handleSubmit = event => {
+    event.preventDefault();
+    if (!value) {
       return alert('тут може бути ваша реклама');
     }
 
-    this.props.submit(this.state.value.toLocaleLowerCase());
+    submit(value.toLocaleLowerCase());
   };
 
-  handleChenge = e => {
-    const { value } = e.currentTarget;
-    this.setState({ value: value });
+  const handleChenge = event => {
+    const { value } = event.currentTarget;
+    setValue(value);
   };
 
-  render() {
-    return (
-      <header className={css.Searchbar}>
-        <form className={css.searchForm} onSubmit={this.handleSubmit}>
-          <button type="submit" className={css.searchForm_button}>
-            search
-          </button>
+  return (
+    <header className={css.Searchbar}>
+      <form className={css.searchForm} onSubmit={handleSubmit}>
+        <button type="submit" className={css.searchForm_button}>
+          search
+        </button>
 
-          <input
-            onChange={this.handleChenge}
-            className={css.searchForm_input}
-            type="text"
-            placeholder="Search images and photos"
-          />
-        </form>
-      </header>
-    );
-  }
-}
+        <input
+          onChange={handleChenge}
+          className={css.searchForm_input}
+          type="text"
+          placeholder="Search images and photos"
+        />
+      </form>
+    </header>
+  );
+};
 
 Searchbar.propTypes = {
   submit: PropTypes.func.isRequired,

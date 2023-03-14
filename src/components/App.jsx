@@ -1,84 +1,85 @@
 import css from '../css.module.css';
-import { Component } from 'react';
+import { useState, useEffect } from 'react';
 import { Audio } from 'react-loader-spinner';
 import { Searchbar } from './searchbar';
 import { ImageGallery } from './imagelist';
 import { api } from 'api';
 import { Button } from './buttonpagination';
-export class App extends Component {
-  state = {
-    data: [],
-    totalHits: 0,
-    search: '',
-    pageNumder: 1,
-    loader: false,
+
+export const App = () => {
+  const [data, setData] = useState([]);
+  const [totalHits, setTotalHits] = useState(0);
+  const [search, setSearch] = useState('');
+  const [pageNumder, setPageNumder] = useState(1);
+  const [loader, setloader] = useState(false);
+
+  useEffect(() => {
+    if (search) {
+      fetchImages();
+    }
+  }, [search, pageNumder]);
+
+  // const componentDidUpdate = (_, prevState) => {
+  //   if (prevState.search !== search && data.length !== 0) {
+  //     this.setState({ data: [], pageNumder: 1 });
+  //   }
+
+  //   if (
+  //     prevState.search !== search ||
+  //     (prevState.pageNumder !== pageNumder && data.length !== 0)
+  //   ) {
+  //     setTimeout(() => {
+  //       fetchImages();
+  //     }, 0);
+  //   }
+  // };
+
+  const fetchImages = async () => {
+    setloader(true);
+
+    const Data = await api(search, pageNumder);
+
+    setData(prevState => [...prevState, ...Data.hits]);
+
+    setTotalHits(Data.totalHits);
+
+    setloader(false);
   };
 
-  componentDidUpdate(_, prevState) {
-    if (
-      prevState.search !== this.state.search &&
-      this.state.data.length !== 0
-    ) {
-      this.setState({ data: [], pageNumder: 1 });
+  const handleSubmit = value => {
+    if (value === search) {
+      return;
     }
 
-    if (
-      prevState.search !== this.state.search ||
-      (prevState.pageNumder !== this.state.pageNumder &&
-        this.state.data.length !== 0)
-    ) {
-      setTimeout(() => {
-        this.fetchImages();
-      }, 0);
-    }
-  }
-
-  fetchImages = async () => {
-    this.setState({ loader: true });
-
-    const data = await api(this.state.search, this.state.pageNumder);
-    this.setState(prevState => ({ data: [...prevState.data, ...data.hits] }));
-
-    this.setState(() => ({
-      totalHits: data.totalHits,
-    }));
-
-    this.setState({ loader: false });
+    setSearch(value);
+    setData([]);
+    setPageNumder(1);
   };
 
-  handleSubmit = value => {
-    this.setState({ search: value });
+  const clickButtonPagination = () => {
+    setPageNumder(prevState => prevState + 1);
   };
 
-  clickButtonPagination = () => {
-    this.setState(prevState => ({
-      pageNumder: prevState.pageNumder + 1,
-    }));
-  };
+  return (
+    <div className={css.App}>
+      <Searchbar submit={handleSubmit} />
+      {loader && (
+        <Audio
+          height="80"
+          width="80"
+          radius="9"
+          color="green"
+          ariaLabel="loading"
+        />
+      )}
+      {data.length > 0 && <ImageGallery data={data} />}
 
-  render() {
-    return (
-      <div className={css.App}>
-        <Searchbar submit={this.handleSubmit} />
-        {this.state.loader && (
-          <Audio
-            height="80"
-            width="80"
-            radius="9"
-            color="green"
-            ariaLabel="loading"
-          />
-        )}
-        {this.state.data.length > 0 && <ImageGallery data={this.state.data} />}
-
-        {this.state.totalHits > this.state.data.length && (
-          <Button click={this.clickButtonPagination}></Button>
-        )}
-        {this.state.data.length === 0 && this.state.search && (
-          <p>нічого не знайшли ідіть і не повертайтеся</p>
-        )}
-      </div>
-    );
-  }
-}
-// totalHits > items.length;
+      {totalHits > data.length && (
+        <Button click={clickButtonPagination}></Button>
+      )}
+      {data.length === 0 && search && !loader && (
+        <p>нічого не знайшли ідіть і не повертайтеся</p>
+      )}
+    </div>
+  );
+};
