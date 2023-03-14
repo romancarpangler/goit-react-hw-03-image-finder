@@ -14,22 +14,18 @@ export const App = () => {
   const [loader, setloader] = useState(false);
 
   useEffect(() => {
+    const fetchImages = async () => {
+      setloader(true);
+      const Data = await api(search, pageNumder);
+      setData(prevState => [...prevState, ...Data.hits]);
+      setTotalHits(Data.totalHits);
+      setloader(false);
+    };
+
     if (search) {
       fetchImages();
     }
-  }, [search, pageNumder, fetchImages]);
-
-  const fetchImages = async () => {
-    setloader(true);
-
-    const Data = await api(search, pageNumder);
-
-    setData(prevState => [...prevState, ...Data.hits]);
-
-    setTotalHits(Data.totalHits);
-
-    setloader(false);
-  };
+  }, [search, pageNumder]);
 
   const handleSubmit = value => {
     if (value === search) {

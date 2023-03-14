@@ -4,15 +4,15 @@ import PropTypes from 'prop-types';
 
 export const Modal = ({ onModal, img }) => {
   useEffect(() => {
+    const keyDown = event => {
+      if (event.code === 'Escape') {
+        onModal();
+      }
+    };
+
     window.addEventListener('keydown', keyDown);
     return window.removeEventListener('keydown', keyDown);
-  }, [keyDown]);
-
-  const keyDown = event => {
-    if (event.code === 'Escape') {
-      onModal();
-    }
-  };
+  }, [onModal]);
 
   const onOverlayClose = e => {
     if (e.currentTarget === e.target) {
